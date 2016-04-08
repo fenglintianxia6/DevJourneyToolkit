@@ -11,6 +11,11 @@ import dev.journey.toolkit.util.L;
  * Created by mwp on 2016/4/8.
  */
 public class DialogUtils {
+    /**
+     * 显示dialog
+     * @param context
+     * @param dialog
+     */
     public static void showDialog(Context context, Dialog dialog) {
         if (context == null || dialog == null || dialog.isShowing()) {
             return;
@@ -29,6 +34,11 @@ public class DialogUtils {
         }
     }
 
+    /**
+     * 隐藏dialog
+     * @param context
+     * @param dialog
+     */
     public static void dismissDialog(Context context, Dialog dialog) {
         if (context == null || dialog == null || !dialog.isShowing()) {
             return;
