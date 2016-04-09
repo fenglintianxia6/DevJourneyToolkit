@@ -28,11 +28,12 @@ public class StdFileUtils {
                 Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
                         !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
                         context.getCacheDir().getPath();
-        File storageDir = new File(cachePath);
-        if (!storageDir.exists()) {
-            storageDir.mkdirs();
+        File dir = new File(cachePath + File.separator + uniqueName);
+        if (!dir.exists()) {
+            dir.mkdirs();
         }
-        return new File(cachePath + File.separator + uniqueName);
+        L.d("StdFileUtils getDiskCacheDir", "dir=" + dir.getAbsolutePath() + ";exists=" + dir.exists());
+        return dir;
     }
 
     /**
@@ -72,6 +73,12 @@ public class StdFileUtils {
     }
 //end---------------------------------------------------------------------------------------------------------------------
 
+    public static File getSdCardFile(Context context, String dirName, String fileName) {
+        File dir = getSdCardDir(context, dirName);
+        File file = new File(dir, fileName);
+        L.d("StdFileUtils", "getSdCardFile: file=" + file.getAbsolutePath());
+        return file;
+    }
 
     public static File getSdCardDir(Context context, String uniqueName) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
