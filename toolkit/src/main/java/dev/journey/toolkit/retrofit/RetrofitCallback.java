@@ -4,6 +4,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
+ * 对retrofit的Callback进行二次封装
  * Created by mwp on 2016/4/8.
  */
 public abstract class RetrofitCallback<T> implements Callback<T> {
@@ -14,7 +15,7 @@ public abstract class RetrofitCallback<T> implements Callback<T> {
             if (data != null) {
                 onDataSuccess(data);
             } else {
-                onFailure(buildException("response.isSuccess but body is null!"));
+                onFailure(buildException("response isSuccess but its body is null!"));
             }
         } else if (response != null) {
             String errorMsg = response.code() + ":" + response.message();
