@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.google.gson.Gson;
 
 import java.io.File;
-import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,7 +27,7 @@ public class FileUploadTask extends AbsTask {
     public static final MediaType MEDIA_TYPE_OCTET_STREAM = MediaType.parse("application/octet-stream");
 
     FileUploadApiService mFileUploadApiService;
-    SoftReference<IFileUploadListener> listenerRef;
+    IFileUploadListener listener;
     File file;
     String uploadUrl;
     String key;
@@ -45,7 +44,7 @@ public class FileUploadTask extends AbsTask {
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
             mFileUploadApiService = builder.build().create(FileUploadApiService.class);
-            listenerRef = new SoftReference<>(listener);
+            this.listener = listener;
             this.file = file;
             this.uploadUrl = uploadUrl;
             this.key = key;
@@ -114,7 +113,7 @@ public class FileUploadTask extends AbsTask {
 
     @Override
     public IFileUploadListener provideListener() {
-        return listenerRef != null ? listenerRef.get() : null;
+        return listener;
     }
 
     public interface IFileUploadListener extends ITaskListener {

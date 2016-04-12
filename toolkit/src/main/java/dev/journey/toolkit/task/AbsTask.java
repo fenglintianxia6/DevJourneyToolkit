@@ -12,7 +12,7 @@ public abstract class AbsTask {
 
     public AbsTask(Activity activity) {
         if (activity != null) {
-            this.activityRef = new SoftReference<Activity>(activity);
+            this.activityRef = new SoftReference<>(activity);
         }
     }
 

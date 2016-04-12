@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.lang.ref.SoftReference;
 
 import dev.journey.toolkit.util.FileDownloader;
 import dev.journey.toolkit.util.L;
@@ -20,13 +19,13 @@ import rx.schedulers.Schedulers;
  * Created by mwp on 2016/4/11.
  */
 public class FileDownloadTask extends AbsTask {
-    private SoftReference<IFileDownloadListener> listenerRef;
+    private IFileDownloadListener listener;
     private String downloadUrl;
 
     public FileDownloadTask(Activity activity, IFileDownloadListener listener, String downloadUrl) {
         super(activity);
         if (activity != null) {
-            listenerRef = new SoftReference<>(listener);
+            this.listener = listener;
             this.downloadUrl = downloadUrl;
         }
     }
@@ -83,7 +82,7 @@ public class FileDownloadTask extends AbsTask {
 
     @Override
     public IFileDownloadListener provideListener() {
-        return listenerRef != null ? listenerRef.get() : null;
+        return listener;
     }
 
     public interface IFileDownloadListener extends ITaskListener {
