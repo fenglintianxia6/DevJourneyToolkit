@@ -2,6 +2,8 @@ package dev.journey.toolkit.util;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -136,5 +138,27 @@ public class StdFileUtils {
             return url;
         }
         return url.substring(url.lastIndexOf("/"), url.length());
+    }
+
+    public static boolean isFileExists(File file) {
+        return file != null && file.isFile() && file.exists();
+    }
+
+    /**
+     * 调起系统安装APK
+     * @param context
+     * @param file
+     */
+    public static void installApk(Context context, File file) {
+        if (context != null && isFileExists(file)) {
+            Uri uri = Uri.fromFile(new File(file.getAbsolutePath()));
+            Intent installIntent = new Intent();
+            installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            installIntent.setAction(Intent.ACTION_VIEW);
+            String type = "application/vnd.android.package-archive";
+            installIntent.putExtra("loadapk", "loadapk");
+            installIntent.setDataAndType(uri, type);
+            context.startActivity(installIntent);
+        }
     }
 }
