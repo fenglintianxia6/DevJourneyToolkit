@@ -1,5 +1,8 @@
 package dev.journey.toolkit.util;
 
+import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 /**
@@ -41,5 +44,22 @@ public class VersionUtils {
                 return -1;
         }
         return 0;
+    }
+
+    /**
+     * 获取版本号
+     *
+     * @return 当前应用的版本号
+     */
+    public static String getVersionName(Activity activity) {
+        String versionName = "1.0.0";
+        try {
+            PackageManager manager = activity.getPackageManager();
+            PackageInfo info = manager.getPackageInfo(activity.getPackageName(), 0);
+            versionName = info.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return versionName;
     }
 }
