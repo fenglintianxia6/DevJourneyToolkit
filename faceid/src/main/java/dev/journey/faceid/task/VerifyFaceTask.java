@@ -12,6 +12,7 @@ import java.util.Map;
 
 import dev.journey.faceid.data.service.FaceIdApiService;
 import dev.journey.toolkit.config.ApiConfig;
+import dev.journey.toolkit.retrofit.DefaultOkHttpClientBuilder;
 import dev.journey.toolkit.retrofit.RetrofitCallback;
 import dev.journey.toolkit.task.AbsTask;
 import dev.journey.toolkit.task.ITaskListener;
@@ -47,6 +48,7 @@ public class VerifyFaceTask extends AbsTask {
                 .baseUrl(builder.baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .client(DefaultOkHttpClientBuilder.newInstance(getActivity()).build())
                 .build()
                 .create(FaceIdApiService.class);
 
