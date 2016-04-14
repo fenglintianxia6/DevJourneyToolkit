@@ -3,7 +3,6 @@ package dev.journey.faceid.task;
 import android.app.Activity;
 import android.text.TextUtils;
 
-
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -13,7 +12,6 @@ import java.util.Map;
 
 import dev.journey.faceid.data.service.FaceIdApiService;
 import dev.journey.toolkit.config.ApiConfig;
-import dev.journey.toolkit.data.service.FileUploadApiService;
 import dev.journey.toolkit.retrofit.RetrofitCallback;
 import dev.journey.toolkit.task.AbsTask;
 import dev.journey.toolkit.task.ITaskListener;
@@ -23,7 +21,6 @@ import retrofit2.Call;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.RxJavaCallAdapterFactory;
-import retrofit2.http.Url;
 
 /**
  * Created by mwp on 2016/4/12.

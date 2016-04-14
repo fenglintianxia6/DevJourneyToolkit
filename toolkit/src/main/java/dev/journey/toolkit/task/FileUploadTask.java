@@ -11,7 +11,6 @@ import java.util.Map;
 
 import dev.journey.toolkit.config.ApiConfig;
 import dev.journey.toolkit.data.service.FileUploadApiService;
-import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
