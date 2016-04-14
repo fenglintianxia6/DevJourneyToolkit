@@ -13,7 +13,11 @@ public abstract class RetrofitCallback<T> implements Callback<T> {
         if (response != null && response.isSuccess()) {
             T data = response.body();
             if (data != null) {
-                onDataSuccess(data);
+                try {
+                    onDataSuccess(data);
+                } catch (Exception e) {
+                    onFailure(e);
+                }
             } else {
                 onFailure(buildException("response isSuccess but its body is null!"));
             }
