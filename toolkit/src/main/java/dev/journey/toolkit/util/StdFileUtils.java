@@ -144,8 +144,18 @@ public class StdFileUtils {
         return file != null && file.isFile() && file.exists();
     }
 
+    public static boolean isFileExists(String filePath) {
+        if (!TextUtils.isEmpty(filePath)) {
+            File file = new File(filePath);
+            return isFileExists(file);
+        } else {
+            return false;
+        }
+    }
+
     /**
      * 调起系统安装APK
+     *
      * @param context
      * @param file
      */

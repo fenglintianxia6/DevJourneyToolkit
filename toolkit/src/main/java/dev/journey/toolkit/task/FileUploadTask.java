@@ -24,7 +24,6 @@ import retrofit2.RxJavaCallAdapterFactory;
  * Created by mwp on 2016/4/11.
  */
 public class FileUploadTask extends AbsTask {
-    public static final MediaType MEDIA_TYPE_OCTET_STREAM = MediaType.parse("application/octet-stream");
 
     FileUploadApiService mFileUploadApiService;
     IFileUploadListener listener;
@@ -69,7 +68,7 @@ public class FileUploadTask extends AbsTask {
 
         provideListener().onStart();
         Map<String, RequestBody> map = new HashMap<>();
-        RequestBody fileBody = RequestBody.create(MEDIA_TYPE_OCTET_STREAM, file);
+        RequestBody fileBody = RequestBody.create(ApiConfig.MEDIA_TYPE_OCTET_STREAM, file);
         map.put(key + "\"; filename=\"" + file.getName(), fileBody);
         Call<Object> call = mFileUploadApiService.uploadFile(uploadUrl, map, ApiConfig.DEFAULT_USER_AGENT);
         call.enqueue(new Callback<Object>() {
