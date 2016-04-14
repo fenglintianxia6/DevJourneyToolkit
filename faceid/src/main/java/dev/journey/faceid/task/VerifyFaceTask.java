@@ -188,7 +188,7 @@ public class VerifyFaceTask extends AbsTask {
             @Override
             public void onDataSuccess(Object o) {
                 if (isCallbackReady()) {
-                    provideListener().onSuccess(new Gson().toJson(o));
+                    provideListener().onSuccess(o);
                 }
             }
         });
@@ -206,6 +206,6 @@ public class VerifyFaceTask extends AbsTask {
 
         void onFailure(Throwable t);
 
-        void onSuccess(String s);
+        void onSuccess(Object data);
     }
 }
