@@ -2,12 +2,14 @@ package dev.journey.toolkit.retrofit;
 
 import android.text.TextUtils;
 import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import dev.journey.toolkit.util.L;
 import okhttp3.Cookie;
 import okhttp3.HttpUrl;
 
@@ -16,6 +18,13 @@ import okhttp3.HttpUrl;
  */
 public class CookieUtils {
 
+    public static void synCookieToCookieManager() {
+        try {
+            CookieSyncManager.getInstance().sync();
+        } catch (Exception e) {
+            L.e("CookieUtils", e);
+        }
+    }
 
     public static List<Cookie> parseCookieList(HttpUrl url, String strCookies) {
         if (TextUtils.isEmpty(strCookies)) {
