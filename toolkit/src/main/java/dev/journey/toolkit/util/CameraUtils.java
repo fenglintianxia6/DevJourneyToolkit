@@ -2,6 +2,8 @@ package dev.journey.toolkit.util;
 
 import android.hardware.Camera;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by mwp on 16/4/14.
  */
@@ -28,6 +30,45 @@ public class CameraUtils {
         }
         return frontFacingCameraId;
     }
-}
 
+    /**
+     * 判断相机权限
+     *
+     * @param camera
+     * @return
+     */
+    public static boolean isCameraHasPermission(Camera camera) {
+        if (camera == null) {
+            return false;
+        }
+
+        Class cameraClass = (Class) camera.getClass();
+        if (cameraClass == null) {
+            return false;
+        }
+
+        try {
+            Field[] fs = cameraClass.getDeclaredFields();
+            if (fs != null) {
+                for (int i = 0; i < fs.length; i++) {
+                    Field f = fs[i];
+                    try {
+                        f.setAccessible(true);
+                        Object val = f.get(camera);//得到此属性的值
+                        if ("mHasPermission".equals(f.getName()) && val instanceof Boolean) {
+                            L.d("CameraUtils isCameraHasPermission", "name:" + f.getName() + "\t value = " + val);
+                            return (boolean) val;
+                        }
+                    } catch (Exception e) {
+                        // no op
+                    }
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return true;
+        }
+    }
+}
 
