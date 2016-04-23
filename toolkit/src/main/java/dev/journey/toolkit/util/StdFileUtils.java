@@ -12,6 +12,8 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class StdFileUtils {
 
@@ -170,5 +172,15 @@ public class StdFileUtils {
             installIntent.setDataAndType(uri, type);
             context.startActivity(installIntent);
         }
+    }
+
+    /**
+     * @param type .jpg,.png...
+     * @return
+     */
+    public static String createTimeStampedPicName(String type) {
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        return imageFileName + type;
     }
 }
