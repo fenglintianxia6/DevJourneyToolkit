@@ -7,9 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 
-import com.example.mwp.uitoolkit.ReadBitmapFromFileTask;
-import com.example.mwp.uitoolkit.WaterMark;
-import com.example.mwp.uitoolkit.WriteBitmapToFileTask;
+import com.bumptech.glide.Glide;
+
+import dev.journey.toolkit.util.TimeUtils;
+import dev.journey.uitoolkit.ReadBitmapFromFileTask;
+import dev.journey.uitoolkit.WaterMark;
+import dev.journey.uitoolkit.WriteBitmapToFileTask;
 
 import java.io.File;
 
@@ -52,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
                 WaterMark.TextWaterMarkConfig textWaterMarkConfig = new WaterMark.TextWaterMarkConfig()
                         .textColor(getResources().getColor(R.color.water_mark_text_color))
                         .textSize(min / 10);
-                Bitmap bitmap = WaterMark.putWaterMark(src, "mwp2016-04-23 16:52:26", textWaterMarkConfig);
-                imageView.setImageBitmap(bitmap);
+                Bitmap bitmap = WaterMark.putWaterMark(src, "mwp " + TimeUtils.createTimeStamp(), textWaterMarkConfig);
                 saveBitmap(bitmap, filePath);
             }
 
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     private void saveBitmap(Bitmap bitmap, String srcFilePath) {
         File srcFile = new File(srcFilePath);
         File dir = srcFile.getParentFile();
-        File targetFile = new File(dir, "WaterMark_" + srcFile.getName());
+        File targetFile = new File(dir, "WM_AT_" + TimeUtils.createTimeStamp() + "_" + srcFile.getName());
         WriteBitmapToFileTask task = new WriteBitmapToFileTask(this, new WriteBitmapToFileTask.IWriteBitmapFromFileListener() {
             @Override
             public void onStart() {
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(File file) {
                 DialogUtils.dismissDialog(MainActivity.this, progressDialog);
                 ToastUtils.showToast(MainActivity.this, "文件保存在" + file.getAbsolutePath());
+                Glide.with(MainActivity.this).load(file).into(imageView);
             }
 
             @Override

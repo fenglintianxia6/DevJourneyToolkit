@@ -1,4 +1,4 @@
-package com.example.mwp.uitoolkit;
+package dev.journey.uitoolkit;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;

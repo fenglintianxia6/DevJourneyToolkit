@@ -1,4 +1,4 @@
-package com.example.mwp.uitoolkit;
+package dev.journey.uitoolkit;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -45,8 +45,9 @@ public class WriteBitmapToFileTask extends AbsTask {
                 try {
                     File file = new File(filePath);
                     OutputStream outputStream = new FileOutputStream(file);
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 85, outputStream);
                     singleSubscriber.onSuccess(file);
+                    bitmap.recycle();
                 } catch (Exception e) {
                     singleSubscriber.onError(e);
                 }

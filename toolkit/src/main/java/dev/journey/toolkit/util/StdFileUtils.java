@@ -173,14 +173,4 @@ public class StdFileUtils {
             context.startActivity(installIntent);
         }
     }
-
-    /**
-     * @param type .jpg,.png...
-     * @return
-     */
-    public static String createTimeStampedPicName(String type) {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        return imageFileName + type;
-    }
 }
