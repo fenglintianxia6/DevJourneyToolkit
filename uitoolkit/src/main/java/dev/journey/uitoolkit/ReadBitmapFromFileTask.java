@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import dev.journey.toolkit.task.AbsTask;
 import dev.journey.toolkit.task.ITaskListener;
 import dev.journey.toolkit.util.StdFileUtils;
+import dev.journey.uitoolkit.util.BitmapUtils;
 import rx.Single;
 import rx.SingleSubscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -19,6 +20,8 @@ import rx.schedulers.Schedulers;
 public class ReadBitmapFromFileTask extends AbsTask {
     IReadBitmapFromFileListener listener;
     String filePath;
+
+    public static final int MAX_BITMAP_SIZE = 1920;
 
     public ReadBitmapFromFileTask(Activity activity, IReadBitmapFromFileListener listener, String filePath) {
         super(activity);
@@ -38,7 +41,17 @@ public class ReadBitmapFromFileTask extends AbsTask {
         Single.create(new Single.OnSubscribe<Bitmap>() {
             @Override
             public void call(SingleSubscriber<? super Bitmap> singleSubscriber) {
-                Bitmap bitmap = BitmapFactory.decodeFile(filePath);
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+
+                BitmapFactory.decodeFile(filePath, options);
+
+                int inSampleSize = BitmapUtils.calculateInSampleSize(options, MAX_BITMAP_SIZE, MAX_BITMAP_SIZE);
+                options.inSampleSize = inSampleSize;
+                options.inJustDecodeBounds = false;
+
+                Bitmap bitmap = BitmapFactory.decodeFile(filePath,options);
+
                 if (bitmap == null) {
                     singleSubscriber.onError(new Exception("unable to decode stream,filePath=" + filePath));
                 } else {
