@@ -37,6 +37,7 @@ public class VerifyFaceTask extends AbsTask {
     String faceTokenKey;
     String imageBestPath;
     String imageBestPathKey;
+    Map<String, String> extraParamsMap;
     List<String> actionImagePathList;
     String actionImagePathListKey;
     FaceIdApiService mFaceIdApiService;
@@ -64,6 +65,7 @@ public class VerifyFaceTask extends AbsTask {
         this.imageBestPathKey = builder.imageBestPathKey;
         this.actionImagePathList = builder.actionImagePathList;
         this.actionImagePathListKey = builder.actionImagePathListKey;
+        this.extraParamsMap = builder.extraParamsMap;
     }
 
     public static class Builder {
@@ -78,6 +80,7 @@ public class VerifyFaceTask extends AbsTask {
         String imageBestPath;
         String imageBestPathKey;
         List<String> actionImagePathList;
+        Map<String, String> extraParamsMap;
         String actionImagePathListKey;
         String baseUrl;
         String url;
@@ -126,6 +129,11 @@ public class VerifyFaceTask extends AbsTask {
             return this;
         }
 
+        public Builder extraParamsMap(Map<String, String> map) {
+            this.extraParamsMap = map;
+            return this;
+        }
+
         public Builder actionImagePathList(String key, List<String> actionImagePathList) {
             this.actionImagePathList = actionImagePathList;
             this.actionImagePathListKey = key;
@@ -148,6 +156,16 @@ public class VerifyFaceTask extends AbsTask {
 
         listener.onStart();
         Map<String, RequestBody> map = new HashMap<>();
+
+        if (extraParamsMap != null && !extraParamsMap.isEmpty()) {
+            for (String key : extraParamsMap.keySet()) {
+                String value = extraParamsMap.get(key);
+                if (!TextUtils.isEmpty(key) && !TextUtils.isEmpty(value)) {
+                    map.put(key, RequestBody.create(ApiConfig.MEDIA_TYPE_TEXT_PLAIN, value));
+                }
+            }
+        }
+
         map.put(deltaKey, RequestBody.create(ApiConfig.MEDIA_TYPE_TEXT_PLAIN, delta));
 
         if (StdFileUtils.isFileExists(idCardFilePath)) {
