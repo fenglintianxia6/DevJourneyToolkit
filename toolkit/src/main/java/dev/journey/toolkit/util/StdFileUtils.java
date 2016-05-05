@@ -142,10 +142,22 @@ public class StdFileUtils {
         return url.substring(url.lastIndexOf("/"), url.length());
     }
 
+    /**
+     * 存在且是文件(而非文件夹)
+     *
+     * @param file
+     * @return
+     */
     public static boolean isFileExists(File file) {
         return file != null && file.isFile() && file.exists();
     }
 
+    /**
+     * 存在且是文件(而非文件夹)
+     *
+     * @param filePath
+     * @return
+     */
     public static boolean isFileExists(String filePath) {
         if (!TextUtils.isEmpty(filePath)) {
             File file = new File(filePath);
@@ -153,6 +165,16 @@ public class StdFileUtils {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 文件或者文件夹存在
+     *
+     * @param file
+     * @return
+     */
+    public static boolean isFileOrDirExists(File file) {
+        return file != null && file.exists();
     }
 
     /**
@@ -172,5 +194,73 @@ public class StdFileUtils {
             installIntent.setDataAndType(uri, type);
             context.startActivity(installIntent);
         }
+    }
+
+    public static boolean deleteFile(String path) {
+        if (TextUtils.isEmpty(path)) {
+            return true;
+        }
+
+        File file = new File(path);
+        if (!file.exists()) {
+            return true;
+        }
+        if (file.isFile()) {
+            return file.delete();
+        }
+        if (!file.isDirectory()) {
+            return false;
+        }
+
+        File[] files = file.listFiles();
+        if (file == null || file.length() == 0) {
+            return file.delete();
+        }
+
+        for (File f : files) {
+            if (isFileExists(f)) {
+                f.delete();
+            } else if (f.isDirectory()) {
+                deleteFile(f.getAbsolutePath());
+            }
+        }
+        return file.delete();
+    }
+
+    /**
+     * 获取文件长度或者目录下所有文件长度总和
+     *
+     * @param dir
+     * @return
+     */
+    public static long getFileDirectorySize(File dir) {
+        long size = 0;
+        if (!isFileOrDirExists(dir)) {
+            return 0;
+        } else if (dir.isDirectory()) {
+            File[] files = dir.listFiles();
+            for (File file : files) {
+                if (isFileExists(file)) {
+                    size += file.length();
+                } else if (isFileOrDirExists(file)) {
+                    size += getFileDirectorySize(file);
+                }
+            }
+        } else if (isFileExists(dir)) {
+            size += dir.length();
+        }
+        return size;
+    }
+
+    public static double toKB(long bytesCount) {
+        return bytesCount * 1.0d / 1024;
+    }
+
+    public static double toMB(long bytesCount) {
+        return toKB(bytesCount) / 1024;
+    }
+
+    public static double toGB(long bytesCount) {
+        return toMB(bytesCount) / 1024;
     }
 }
