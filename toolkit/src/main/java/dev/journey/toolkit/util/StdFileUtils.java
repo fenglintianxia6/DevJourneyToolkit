@@ -213,7 +213,7 @@ public class StdFileUtils {
         }
 
         File[] files = file.listFiles();
-        if (file == null || file.length() == 0) {
+        if (files == null || files.length == 0) {
             return file.delete();
         }
 
@@ -239,11 +239,13 @@ public class StdFileUtils {
             return 0;
         } else if (dir.isDirectory()) {
             File[] files = dir.listFiles();
-            for (File file : files) {
-                if (isFileExists(file)) {
-                    size += file.length();
-                } else if (isFileOrDirExists(file)) {
-                    size += getFileDirectorySize(file);
+            if (files != null && files.length > 0) {
+                for (File file : files) {
+                    if (isFileExists(file)) {
+                        size += file.length();
+                    } else if (isFileOrDirExists(file)) {
+                        size += getFileDirectorySize(file);
+                    }
                 }
             }
         } else if (isFileExists(dir)) {

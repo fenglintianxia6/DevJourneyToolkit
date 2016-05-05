@@ -1,62 +1,72 @@
 package dev.journey.toolkitapp;
 
 import android.app.ProgressDialog;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
-
-import com.bumptech.glide.Glide;
-
-import dev.journey.toolkit.util.TimeUtils;
-import dev.journey.uitoolkit.ReadBitmapFromFileTask;
-import dev.journey.uitoolkit.WaterMark;
-import dev.journey.uitoolkit.WriteBitmapToFileTask;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.io.File;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import dev.journey.toolkit.faulttolerant.DialogUtils;
 import dev.journey.toolkit.faulttolerant.ToastUtils;
+import dev.journey.toolkit.task.FileDirDeleteTask;
+import dev.journey.toolkit.util.L;
 import dev.journey.toolkit.util.StdFileUtils;
+import dev.journey.toolkit.util.StringUtils;
 
 public class MainActivity extends AppCompatActivity {
     float density;
-    ImageView imageView;
     ProgressDialog progressDialog;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.textView)
+    TextView textView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
         density = getResources().getDisplayMetrics().density;
-        imageView = (ImageView) findViewById(R.id.image);
         progressDialog = new ProgressDialog(this);
-        getBitmap();
+        progressDialog.setCancelable(false);
+
+        File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD");
+        long length = StdFileUtils.getFileDirectorySize(dir);
+        textView.setText(StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
     }
 
-    private void getBitmap() {
-        final String filePath = StdFileUtils.getSdCardFile(this, "Download", "text_watermark.jpg").getAbsolutePath();
-        ReadBitmapFromFileTask task = new ReadBitmapFromFileTask(this, new ReadBitmapFromFileTask.IReadBitmapFromFileListener() {
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_clear_cache: {
+                File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD");
+                clearCache(dir);
+                long length = StdFileUtils.getFileDirectorySize(dir);
+                L.d("MainActivity", "after deleteFile, dir length = " + StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
+                return true;
+            }
+            default: {
+                return super.onOptionsItemSelected(item);
+            }
+        }
+    }
+
+    private void clearCache(File dir) {
+        FileDirDeleteTask dirDeleteTask = new FileDirDeleteTask(this, new FileDirDeleteTask.IFileDirDeleteListener() {
             @Override
             public void onStart() {
-                progressDialog.setMessage("正在读取图片...");
+                progressDialog.setMessage("正在清理缓存，请稍候...");
                 DialogUtils.showDialog(MainActivity.this, progressDialog);
-            }
-
-            @Override
-            public void onSuccess(Bitmap src) {
-                int width = src.getWidth();
-                int height = src.getHeight();
-                int min = Math.min(width, height);
-                WaterMark.TextWaterMarkConfig textWaterMarkConfig = new WaterMark.TextWaterMarkConfig()
-                        .textColor(getResources().getColor(R.color.water_mark_text_color))
-                        .textSize(min / 10);
-                Bitmap bitmap = WaterMark.putWaterMark(src, "mwp " + TimeUtils.createTimeStamp(), textWaterMarkConfig);
-                saveBitmap(bitmap, filePath);
             }
 
             @Override
@@ -64,36 +74,23 @@ public class MainActivity extends AppCompatActivity {
                 DialogUtils.dismissDialog(MainActivity.this, progressDialog);
                 ToastUtils.showToast(MainActivity.this, throwable.getMessage());
             }
-        }, filePath);
-        task.checkAndStart();
+
+            @Override
+            public void onSuccess() {
+                DialogUtils.dismissDialog(MainActivity.this, progressDialog);
+                ToastUtils.showToast(MainActivity.this, "清理成功");
+                File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD");
+                long length = StdFileUtils.getFileDirectorySize(dir);
+                textView.setText(StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
+            }
+        }, dir);
+        dirDeleteTask.checkAndStart();
     }
 
-
-    private void saveBitmap(Bitmap bitmap, String srcFilePath) {
-        File srcFile = new File(srcFilePath);
-        File dir = srcFile.getParentFile();
-        File targetFile = new File(dir, "WM_AT_" + TimeUtils.createTimeStamp() + "_" + srcFile.getName());
-        WriteBitmapToFileTask task = new WriteBitmapToFileTask(this, new WriteBitmapToFileTask.IWriteBitmapFromFileListener() {
-            @Override
-            public void onStart() {
-                progressDialog.setMessage("正在保存水印图片...");
-                DialogUtils.showDialog(MainActivity.this, progressDialog);
-            }
-
-            @Override
-            public void onSuccess(File file) {
-                DialogUtils.dismissDialog(MainActivity.this, progressDialog);
-                ToastUtils.showToast(MainActivity.this, "文件保存在" + file.getAbsolutePath());
-                Glide.with(MainActivity.this).load(file).into(imageView);
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                DialogUtils.dismissDialog(MainActivity.this, progressDialog);
-                ToastUtils.showToast(MainActivity.this, throwable.getMessage());
-            }
-        }, bitmap, targetFile.getAbsolutePath());
-        task.checkAndStart();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_main, menu);
+        return true;
     }
-
 }
