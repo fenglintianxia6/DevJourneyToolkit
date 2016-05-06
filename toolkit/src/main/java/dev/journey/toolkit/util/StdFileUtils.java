@@ -29,6 +29,17 @@ public class StdFileUtils {
      * @return The cache dir
      */
     public static File getDiskCacheDir(Context context, String uniqueName) {
+        return getDiskCacheDir(context, uniqueName, true);
+    }
+
+    /**
+     * Get a usable cache directory (external if available, internal otherwise).
+     *
+     * @param context    The context to use
+     * @param uniqueName A unique directory name to append to the cache dir
+     * @return The cache dir
+     */
+    public static File getDiskCacheDir(Context context, String uniqueName, boolean autoCreate) {
         // Check if media is mounted or storage is built-in, if so, try and use external cache dir
         // otherwise use internal cache dir
         final String cachePath =
@@ -36,7 +47,7 @@ public class StdFileUtils {
                         !isExternalStorageRemovable() ? getExternalCacheDir(context).getPath() :
                         context.getCacheDir().getPath();
         File dir = new File(cachePath + File.separator + uniqueName);
-        if (!dir.exists()) {
+        if (autoCreate && !dir.exists()) {
             dir.mkdirs();
         }
         L.d("StdFileUtils getDiskCacheDir", "dir=" + dir.getAbsolutePath() + ";exists=" + dir.exists());
@@ -88,16 +99,20 @@ public class StdFileUtils {
     }
 
     public static File getSdCardDir(Context context, String uniqueName) {
+        return getSdCardDir(context, uniqueName, true);
+    }
+
+    public static File getSdCardDir(Context context, String uniqueName, boolean autoCreate) {
         if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState()) ||
                 !isExternalStorageRemovable()) {
             File dir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + uniqueName);
-            if (!dir.exists()) {
+            if (autoCreate && !dir.exists()) {
                 dir.mkdirs();
             }
             L.d("StdFileUtils", "getSdCardDir: dir=" + dir.getAbsolutePath());
             return dir;
         } else {
-            File dir = getDiskCacheDir(context, uniqueName);
+            File dir = getDiskCacheDir(context, uniqueName, autoCreate);
             L.d("StdFileUtils", "getSdCardDir: dir=" + dir.getAbsolutePath());
             return dir;
         }

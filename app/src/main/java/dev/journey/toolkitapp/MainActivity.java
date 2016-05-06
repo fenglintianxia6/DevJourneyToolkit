@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         progressDialog = new ProgressDialog(this);
         progressDialog.setCancelable(false);
 
-        File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD");
+        File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD", false);
         calculateCacheSize(dir);
     }
 
@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess() {
                 DialogUtils.dismissDialog(MainActivity.this, progressDialog);
                 ToastUtils.showToast(MainActivity.this, "清理成功");
-                File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD");
+                File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD", false);
                 long length = StdFileUtils.getFileDirectorySize(dir);
                 textView.setText(StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
             }
