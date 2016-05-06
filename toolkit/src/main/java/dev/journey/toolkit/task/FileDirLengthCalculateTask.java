@@ -6,6 +6,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import dev.journey.toolkit.util.L;
 import dev.journey.toolkit.util.StdFileUtils;
 import rx.Single;
 import rx.SingleSubscriber;
@@ -46,7 +47,9 @@ public class FileDirLengthCalculateTask extends AbsTask {
                     long totalSize = 0;
                     for (File dir : dirList) {
                         totalSize += StdFileUtils.getFileDirectorySize(dir);
+                        L.d("FileDirLengthCalculateTask", "size = " + totalSize);
                     }
+                    L.d("FileDirLengthCalculateTask", "totalSize = " + totalSize);
                     singleSubscriber.onSuccess(totalSize);
                 } catch (Exception e) {
                     singleSubscriber.onError(e);
