@@ -16,6 +16,7 @@ import butterknife.ButterKnife;
 import dev.journey.toolkit.faulttolerant.DialogUtils;
 import dev.journey.toolkit.faulttolerant.ToastUtils;
 import dev.journey.toolkit.task.FileDirDeleteTask;
+import dev.journey.toolkit.task.FileDirLengthCalculateTask;
 import dev.journey.toolkit.util.L;
 import dev.journey.toolkit.util.StdFileUtils;
 import dev.journey.toolkit.util.StringUtils;
@@ -41,8 +42,28 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setCancelable(false);
 
         File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD");
-        long length = StdFileUtils.getFileDirectorySize(dir);
-        textView.setText(StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
+        calculateCacheSize(dir);
+    }
+
+    private void calculateCacheSize(File dir) {
+        FileDirLengthCalculateTask task = new FileDirLengthCalculateTask(this, new FileDirLengthCalculateTask.FileDirLengthCalculateListener() {
+            @Override
+            public void onStart() {
+                textView.setText("正在计算缓存大小");
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                textView.setText("获取缓存大小失败！");
+            }
+
+            @Override
+            public void onSuccess(long length) {
+                textView.setText(StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
+            }
+        });
+        task.addFileOrDir(dir);
+        task.checkAndStart();
     }
 
     @Override
