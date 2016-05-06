@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 long length = StdFileUtils.getFileDirectorySize(dir);
                 textView.setText(StringUtils.formatDouble(StdFileUtils.toMB(length)) + "MB");
             }
-        }, dir);
+        }).addFileOrDir(dir);
         dirDeleteTask.checkAndStart();
     }
 

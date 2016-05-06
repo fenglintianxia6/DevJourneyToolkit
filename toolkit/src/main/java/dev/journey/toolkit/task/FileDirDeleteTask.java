@@ -3,6 +3,8 @@ package dev.journey.toolkit.task;
 import android.app.Activity;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import dev.journey.toolkit.util.StdFileUtils;
 import rx.Single;
@@ -16,26 +18,39 @@ import rx.schedulers.Schedulers;
  */
 public class FileDirDeleteTask extends AbsTask {
     IFileDirDeleteListener listener;
-    File dir;
+    List<File> dirList = new ArrayList<>();
 
-    public FileDirDeleteTask(Activity activity, IFileDirDeleteListener listener, File dir) {
+    public FileDirDeleteTask(Activity activity, IFileDirDeleteListener listener) {
         super(activity);
         this.listener = listener;
-        this.dir = dir;
+    }
+
+    public FileDirDeleteTask addFileOrDir(File file) {
+        if (file != null) {
+            dirList.add(file);
+        }
+        return this;
     }
 
     @Override
     protected void onStart() {
-        if (!StdFileUtils.isFileOrDirExists(dir)) {
-            listener.onFailure(new Exception("dir " + dir + " is not exists"));
+        if (dirList.isEmpty()) {
+            listener.onFailure(new Exception("dirList can not be empty!"));
             return;
         }
         listener.onStart();
         Single.create(new Single.OnSubscribe<Object>() {
             @Override
             public void call(SingleSubscriber<? super Object> singleSubscriber) {
-                boolean deleted = StdFileUtils.deleteFile(dir.getAbsolutePath());
-                singleSubscriber.onSuccess(deleted);
+                try {
+                    for (File dir : dirList) {
+                        StdFileUtils.deleteFile(dir.getAbsolutePath());
+                    }
+                    singleSubscriber.onSuccess(true);
+                } catch (Exception e) {
+                    singleSubscriber.onError(e);
+                }
+                dirList.clear();
             }
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Action1<Object>() {
