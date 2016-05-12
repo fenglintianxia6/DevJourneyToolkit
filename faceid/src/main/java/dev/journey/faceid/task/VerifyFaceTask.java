@@ -19,9 +19,9 @@ import dev.journey.toolkit.task.ITaskListener;
 import dev.journey.toolkit.util.StdFileUtils;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
-import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by mwp on 2016/4/12.
@@ -197,7 +197,7 @@ public class VerifyFaceTask extends AbsTask {
 
         call.enqueue(new RetrofitCallback<Object>() {
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Object> c, Throwable t) {
                 if (isCallbackReady()) {
                     provideListener().onFailure(t);
                 }

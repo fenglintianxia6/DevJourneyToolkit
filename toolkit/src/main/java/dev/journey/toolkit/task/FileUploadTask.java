@@ -3,8 +3,6 @@ package dev.journey.toolkit.task;
 import android.app.Activity;
 import android.text.TextUtils;
 
-import com.google.gson.Gson;
-
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +13,9 @@ import dev.journey.toolkit.retrofit.DefaultOkHttpClientBuilder;
 import dev.journey.toolkit.retrofit.RetrofitCallback;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.RxJavaCallAdapterFactory;
+import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by mwp on 2016/4/11.
@@ -112,7 +108,7 @@ public class FileUploadTask extends AbsTask {
         call.enqueue(new RetrofitCallback<Object>() {
 
             @Override
-            public void onFailure(Throwable t) {
+            public void onFailure(Call<Object> c, Throwable t) {
                 if (isCallbackReady()) {
                     provideListener().onFailure(t);
                 }

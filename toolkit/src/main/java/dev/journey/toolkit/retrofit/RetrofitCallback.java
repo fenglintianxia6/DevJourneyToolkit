@@ -1,5 +1,6 @@
 package dev.journey.toolkit.retrofit;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -9,23 +10,23 @@ import retrofit2.Response;
  */
 public abstract class RetrofitCallback<T> implements Callback<T> {
     @Override
-    public void onResponse(Response<T> response) {
-        if (response != null && response.isSuccess()) {
+    public void onResponse(Call<T> call, Response<T> response) {
+        if (response != null && response.isSuccessful()) {
             T data = response.body();
             if (data != null) {
                 try {
                     onDataSuccess(data);
                 } catch (Exception e) {
-                    onFailure(e);
+                    onFailure(call, e);
                 }
             } else {
-                onFailure(buildException("response isSuccess but its body is null!"));
+                onFailure(call, buildException("response isSuccess but its body is null!"));
             }
         } else if (response != null) {
             String errorMsg = response.code() + ":" + response.message();
-            onFailure(buildException(errorMsg));
+            onFailure(call, buildException(errorMsg));
         } else {
-            onFailure(buildException("response is null!"));
+            onFailure(call, buildException("response is null!"));
         }
     }
 
@@ -34,7 +35,7 @@ public abstract class RetrofitCallback<T> implements Callback<T> {
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<T> call, Throwable t) {
 
     }
 
