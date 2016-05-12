@@ -2,6 +2,7 @@ package dev.journey.toolkitapp;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,6 +21,7 @@ import dev.journey.toolkit.task.FileDirLengthCalculateTask;
 import dev.journey.toolkit.util.L;
 import dev.journey.toolkit.util.StdFileUtils;
 import dev.journey.toolkit.util.StringUtils;
+import dev.journey.uitoolkit.view.FlexibleTabLayout;
 
 public class MainActivity extends AppCompatActivity {
     float density;
@@ -28,6 +30,10 @@ public class MainActivity extends AppCompatActivity {
     Toolbar toolbar;
     @BindView(R.id.textView)
     TextView textView;
+    @BindView(R.id.flexibleTabLayout)
+    FlexibleTabLayout flexibleTabLayout;
+    @BindView(R.id.tabLayout)
+    TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +49,16 @@ public class MainActivity extends AppCompatActivity {
 
         File dir = StdFileUtils.getSdCardDir(MainActivity.this, "QuFenQiBD", false);
         calculateCacheSize(dir);
+
+        tabLayout.addTab(tabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+        tabLayout.addTab(tabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+        tabLayout.addTab(tabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+        tabLayout.addTab(tabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+
+        flexibleTabLayout.addTab(flexibleTabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+        flexibleTabLayout.addTab(flexibleTabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+        flexibleTabLayout.addTab(flexibleTabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
+        flexibleTabLayout.addTab(flexibleTabLayout.newTab().setText("1").setIcon(getResources().getDrawable(R.mipmap.ic_launcher)));
     }
 
     private void calculateCacheSize(File dir) {
