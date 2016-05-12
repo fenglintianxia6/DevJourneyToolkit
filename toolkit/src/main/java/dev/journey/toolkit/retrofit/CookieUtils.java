@@ -50,11 +50,7 @@ public class CookieUtils {
         String domain = null;
         String host = url.getHost();
         if (host != null) {
-            if (host.contains(".qufenqi.com")) {
-                domain = ".qufenqi.com";
-            } else {
-                domain = host;
-            }
+            domain = host;
         }
         return domain;
     }
