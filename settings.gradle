@@ -1,1 +1,1 @@
-include ':app', ':toolkit', ':faceid', ':uitoolkit'
+include ':app', ':toolkit', ':faceid', ':uitoolkit', ':apptoolkit'
