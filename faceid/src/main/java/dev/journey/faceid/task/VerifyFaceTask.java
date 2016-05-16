@@ -204,7 +204,7 @@ public class VerifyFaceTask extends AbsTask {
             }
 
             @Override
-            public void onDataSuccess(Object o) {
+            public void onDataSuccess(Call<Object> c, Object o) {
                 if (isCallbackReady()) {
                     provideListener().onSuccess(o);
                 }

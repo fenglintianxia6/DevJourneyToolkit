@@ -115,7 +115,7 @@ public class FileUploadTask extends AbsTask {
             }
 
             @Override
-            public void onDataSuccess(Object data) {
+            public void onDataSuccess(Call<Object> c,Object data) {
                 if (isCallbackReady()) {
                     provideListener().onSuccess(data);
                 }
