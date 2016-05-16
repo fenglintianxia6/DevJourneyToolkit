@@ -15,7 +15,7 @@ public abstract class RetrofitCallback<T> implements Callback<T> {
             T data = response.body();
             if (data != null) {
                 try {
-                    onDataSuccess(data);
+                    onDataSuccess(call, data);
                 } catch (Exception e) {
                     onFailure(call, e);
                 }
@@ -39,5 +39,5 @@ public abstract class RetrofitCallback<T> implements Callback<T> {
 
     }
 
-    public abstract void onDataSuccess(T data);
+    public abstract void onDataSuccess(Call<T> call, T data);
 }
