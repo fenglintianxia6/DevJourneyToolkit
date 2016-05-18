@@ -8,14 +8,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by mwp on 2016/2/25.
  */
 public class RetrofitComponentFactory {
-    public static Retrofit.Builder createRetrofitBuilder() {
-        Retrofit.Builder builder = new Retrofit.Builder().client(GlobalOkHttpManager.getInstance().get())
+    public static Retrofit.Builder newGsonRxJavaRetrofitBuilder() {
+        Retrofit.Builder builder = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
         return builder;
-    }
-
-    public static Retrofit createRetrofit(String baseUrl) {
-        return createRetrofitBuilder().baseUrl(baseUrl).build();
     }
 }
