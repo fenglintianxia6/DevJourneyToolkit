@@ -22,7 +22,7 @@ import dev.journey.toolkit.util.StdFileUtils;
  * @author mwp on 2015年4月8日 下午2:44:17
  */
 public class FileDownloadService extends IntentService {
-    private static final String SERVICE_NAME = "com.qufenqi.android.apptoolkit.update.FileDownloadService";
+    private static final String SERVICE_NAME = "dev.journey.apptoolkit.update.FileDownloadService";
     private Config config;
     protected int mCurrentProgress;
     private NotificationManagerCompat notificationManagerCompat;

@@ -10,9 +10,11 @@
     tools:showIn="@layout/activity_main">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:clickable="true" />
+        android:background="#ff333333"
+        android:clickable="true"
+        android:onClick="test" />
 
 </RelativeLayout>
