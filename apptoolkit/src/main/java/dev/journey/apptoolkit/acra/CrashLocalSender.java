@@ -1,4 +1,4 @@
-package com.qufenqi.android.apptoolkit.acra;
+package dev.journey.apptoolkit.acra;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
