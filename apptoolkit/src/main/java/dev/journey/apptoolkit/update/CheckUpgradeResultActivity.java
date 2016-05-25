@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
 
+import dev.journey.toolkit.util.VersionUtils;
+
 public class CheckUpgradeResultActivity extends AppCompatActivity {
     UpgradeInfoProvider provider;
     Config config;
@@ -54,6 +56,7 @@ public class CheckUpgradeResultActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (!provider.isForceUpgrade()) {
+                            VersionUtils.saveIgnoredVersion(CheckUpgradeResultActivity.this, provider.getNewVersionName());
                             finish();
                         } else {
                             Intent intent = new Intent(CheckUpgradeResultActivity.this, config.getActivityClass());
