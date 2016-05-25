@@ -24,6 +24,7 @@ import dev.journey.toolkit.util.StdFileUtils;
 public class FileDownloadService extends IntentService {
     private static final String SERVICE_NAME = "dev.journey.apptoolkit.update.FileDownloadService";
     private Config config;
+    private String url;
     protected int mCurrentProgress;
     private NotificationManagerCompat notificationManagerCompat;
     private NotificationCompat.Builder mBuilder;
@@ -74,39 +75,39 @@ public class FileDownloadService extends IntentService {
     private void createNotification() {
         notificationManagerCompat = NotificationManagerCompat.from(this);
         mBuilder = new NotificationCompat.Builder(this);
-        Intent i = new Intent(this, config.getPendingIntentClass());
-        i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        PendingIntent intent = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-        mBuilder.setContentIntent(intent);
         mBuilder.setAutoCancel(false);
     }
 
 
     protected void onHandleIntent(Intent intent) {
-        createNotification();
         Bundle bundle = intent.getExtras();
         config = (Config) bundle.getSerializable(Config.TAG);
-        if (config != null && !TextUtils.isEmpty(config.getUrl())) {
-            File targetDir = StdFileUtils.getSdCardDir(this, "download");
-            ProgressFileDownloader downloader = new ProgressFileDownloader(fileDownloadListener);
-            ProgressFileDownloader.DownloadRequest request = new ProgressFileDownloader.DownloadRequest()
-                    .downloadUrl(config.getUrl())
-                    .fileName(StdFileUtils.getFileNameFromUrl(config.getUrl()))
-                    .targetDir(targetDir == null ? null : targetDir.getAbsolutePath());
-            downloader.download(request);
+        url = bundle.getString("url");
+        if (config != null && !TextUtils.isEmpty(url)) {
+            createNotification();
+            if (config != null && !TextUtils.isEmpty(url)) {
+                File targetDir = StdFileUtils.getSdCardDir(this, "download");
+                ProgressFileDownloader downloader = new ProgressFileDownloader(fileDownloadListener);
+                ProgressFileDownloader.DownloadRequest request = new ProgressFileDownloader.DownloadRequest()
+                        .downloadUrl(url)
+                        .fileName(StdFileUtils.getFileNameFromUrl(url))
+                        .targetDir(targetDir == null ? null : targetDir.getAbsolutePath());
+                downloader.download(request);
+            }
         }
     }
 
-    public static void download(Context context, Config config) {
+    public static void download(Context context, Config config, String url) {
         /**
          * 下载链接或者目标文件夹地址不合法不予下载
          */
-        if (config == null || TextUtils.isEmpty(config.getUrl())) {
+        if (config == null || TextUtils.isEmpty(url)) {
             return;
         }
         Intent downloadIntent = new Intent(context, FileDownloadService.class);
         Bundle bundle = new Bundle();
         bundle.putSerializable(Config.TAG, config);
+        bundle.putSerializable("url", url);
         downloadIntent.putExtras(bundle);
         context.startService(downloadIntent);
     }

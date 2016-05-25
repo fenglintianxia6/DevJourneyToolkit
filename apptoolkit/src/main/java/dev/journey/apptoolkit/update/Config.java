@@ -1,5 +1,7 @@
 package dev.journey.apptoolkit.update;
 
+import android.app.Activity;
+
 import java.io.Serializable;
 
 /**
@@ -7,34 +9,24 @@ import java.io.Serializable;
  */
 public class Config implements Serializable {
     public static final String TAG = "Config";
-    private String url;
     private int smallIcon;
-    private Class<?> pendingIntentClass;
-
-    public Config url(String url) {
-        this.url = url;
-        return this;
-    }
+    private Class activityClass;
 
     public Config smallIcon(int smallIcon) {
         this.smallIcon = smallIcon;
         return this;
     }
 
-    public Config pendingIntentClass(Class<?> pendingIntentClass) {
-        this.pendingIntentClass = pendingIntentClass;
-        return this;
+    public Class getActivityClass() {
+        return activityClass;
     }
 
-    public String getUrl() {
-        return url;
+    public Config activityClass(Class activityClass) {
+        this.activityClass = activityClass;
+        return this;
     }
 
     public int getSmallIcon() {
         return smallIcon;
-    }
-
-    public Class<?> getPendingIntentClass() {
-        return pendingIntentClass;
     }
 }

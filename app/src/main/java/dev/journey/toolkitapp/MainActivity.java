@@ -6,10 +6,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+import com.google.gson.Gson;
+
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import dev.journey.apptoolkit.update.CheckUpgradeResultActivity;
+import dev.journey.apptoolkit.update.Config;
 import dev.journey.apptoolkit.update.DataInterceptor;
 import dev.journey.apptoolkit.update.UpgradeClient;
 import dev.journey.apptoolkit.update.UpgradeInfoProvider;
@@ -27,13 +31,23 @@ public class MainActivity extends AppCompatActivity {
         UpgradeClient upgradeClient = new UpgradeClient(this, "http://dev4.apitest.qufenqi.com/", new DataInterceptor() {
             @Override
             public UpgradeInfoProvider intercept(Object data) {
-                return null;
+                Gson gson = new Gson();
+                UpgradeInfoProvider provider = gson.fromJson(gson.toJson(data), UpgradeBean.class);
+                return provider;
             }
         });
-        upgradeClient.checkUpgrade(url, new HashMap<String, String>(1));
+        upgradeClient.checkUpgrade(url, new HashMap<String, String>(1),
+                new Config().smallIcon(R.mipmap.ic_launcher)
+                        .activityClass(MainActivity.class));
     }
 
     public void test(View v) {
-        startActivity(new Intent(this, TestActivity.class));
+        startActivity(new Intent(this, CheckUpgradeResultActivity.class));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        UpgradeClient.handleNewIntent(this, intent);
     }
 }
