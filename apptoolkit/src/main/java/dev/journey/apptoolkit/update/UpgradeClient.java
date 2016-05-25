@@ -99,9 +99,11 @@ public class UpgradeClient {
         });
     }
 
-    public static void handleNewIntent(Activity activity, Intent intent) {
+    public static boolean handleNewIntent(Activity activity, Intent intent) {
         if (intent != null && activity != null && intent.getBooleanExtra("force_finish", false)) {
             activity.finish();
+            return true;
         }
+        return false;
     }
 }
